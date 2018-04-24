@@ -13,10 +13,11 @@ import java.awt.Graphics;
  * @author alu20925473g
  */
 public class Util {
-     public  static void drawSquare(Graphics g, int row, int col,Color color,  int squareWidth, int squareHeight) {
+     public  static void drawSquare(Graphics g, Node node,Color color,  int squareWidth, int squareHeight) {
         
-        int x = col * squareWidth;
-        int y = row * squareHeight;
+         
+        int x = node.col * squareWidth;
+        int y = node.row * squareHeight;
        
         g.setColor(color);
         g.fillRect(x + 1, y + 1, squareWidth - 2, squareHeight - 2);
