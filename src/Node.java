@@ -21,6 +21,18 @@ public class Node  {
         this.col--;
         return new Node(row, col);
     }
+    public Node incrementCol(){
+        this.col++;
+        return new Node(row, col);
+    }
+    public Node decrementRow(){
+        this.row--;
+        return new Node(row, col);
+    }
+    public Node incrementRow(){
+        this.row++;
+        return new Node(row, col);
+    }
 
    
     public boolean isEqual(Node t) {

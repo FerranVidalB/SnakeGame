@@ -36,7 +36,7 @@ public class Snake {
         Node head=body.get(0);
         switch (direction) {
             case RIGHT:
-                body.add(0, head.);
+                body.add(0, head.incrementCol());
                 break;
             case LEFT:
                 break;
