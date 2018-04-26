@@ -1,4 +1,5 @@
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -69,11 +70,9 @@ public class Board extends JPanel implements ActionListener {
                 default:
                     break;
             }
-            
 
         }
     }
-    
 
     public int getNum_rows() {
         return num_rows;
@@ -102,6 +101,7 @@ public class Board extends JPanel implements ActionListener {
     private Snake snake;
     private Food food;
     private int foodGenerator;
+     private IncrementScorer scorerDelegate;
 
     public Board() {
         super();
@@ -111,68 +111,82 @@ public class Board extends JPanel implements ActionListener {
         snake = null;
         MyKeyAdapter keyb = new MyKeyAdapter();
         addKeyListener(keyb);
-        currentFood=null;
-         
+        currentFood = null;
 
+    }
+    public void setScorer(IncrementScorer scorer) {
+        this.scorerDelegate = scorer;
     }
 
     public void initValues() {
         setFocusable(true);
-       
 
         deltatime = 200;
         direction = DirectionType.RIGHT;
 
     }
-    public boolean canMove(DirectionType direction){
+
+    public boolean canMove(DirectionType direction) {
         Node nextMove = snake.nextMove(direction);
-        ArrayList<Node> bodysnake=snake.getNodes();
-        for(Node body:bodysnake){
-            if(body.isEqual(nextMove)){
+        ArrayList<Node> bodysnake = snake.getNodes();
+        for (Node body : bodysnake) {
+            if (body.isEqual(nextMove)) {
                 return false;
             }
         }
-        if(nextMove.col<0 || nextMove.col >= num_cols ||
-                nextMove.row<0 || nextMove.row>=num_rows){
+        if (nextMove.col < 0 || nextMove.col >= num_cols
+                || nextMove.row < 0 || nextMove.row >= num_rows) {
             return false;
         }
         return true;
     }
 
     public void initGame() {
-
+        foodGenerator = 0;
         snake = new Snake(new Node(num_rows / 2, num_cols / 2));
         isPlaying = true;
+        scorerDelegate.reset();
         timer.start();
-        
-        
+
     }
-    
 
     //Game Main Loop
     @Override
     public void actionPerformed(ActionEvent ae) {
+
         generateFood();
-        if(canMove(direction)){
-        snake.moveTo(direction);
-        }else{
+
+        if (canMove(direction)) {
+            snake.moveTo(direction,hasEaten());
+        } else {
             timer.stop();
+
         }
-        
+
         repaint();
         Toolkit.getDefaultToolkit().sync();
 
     }
-    public void generateFood(){
-        if(foodGenerator==10){
-        currentFood= new Food(snake, num_rows, num_cols);
-        foodGenerator=0;
-        }else{
-            foodGenerator++;
+
+    public boolean hasEaten() {
+
+        if (currentFood.getFoodPosition().isEqual(snake.getHead())) {
+            currentFood = null;
+            scorerDelegate.increment(12);
+            return true;
+        }
+        return false;
+    }
+
+    public void generateFood() {
+        if (currentFood == null) {
+            currentFood = new Food(snake, num_rows, num_cols);
         }
     }
-    public void gameOver(){
+
+    public void gameOver() {
         timer.stop();
+         scorerDelegate.getScore();
     }
 
     protected void paintComponent(Graphics g) {
@@ -183,10 +197,14 @@ public class Board extends JPanel implements ActionListener {
             snake.draw(g, squareWidth(), squareHeight());
 
         }
-        if(currentFood!=null){
-            currentFood.draw(g, WIDTH, HEIGHT);
+        if (currentFood != null) {
+            currentFood.draw(g, squareWidth(), squareHeight());
         }
-        //drawBorder(g);
+        drawBorder(g);
+    }
+     public void drawBorder(Graphics g) {
+        g.setColor(Color.red);
+        g.drawRect(0, 0, num_cols * squareWidth(), num_rows * squareHeight());
     }
 
     private int squareWidth() {

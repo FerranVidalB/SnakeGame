@@ -22,11 +22,12 @@ public class Food {
 
         while (colisionWithSnake) {
             colisionWithSnake = false;
-            int row = (int) (Math.random() * totalRows + 1);
-            int col = (int) (Math.random() * totalCols + 1);
+            int row = (int) (Math.random() * totalRows);
+            int col = (int) (Math.random() * totalCols);
             position = new Node(row, col);
+            
             for (Node body : snake.getNodes()) {
-                if (!body.isEqual(position)) {
+                if (body.isEqual(position)) {
                     colisionWithSnake = true;
                 }
             }
@@ -34,6 +35,9 @@ public class Food {
         }
         
 
+    }
+    public Node getFoodPosition(){
+        return position;
     }
     public void draw(Graphics g, int squareWidth, int squareHeight) {
       
