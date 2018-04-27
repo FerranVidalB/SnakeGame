@@ -7,18 +7,17 @@ import java.awt.Graphics;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author alu20925473g
  */
 public class Util {
-     public  static void drawSquare(Graphics g, Node node,Color color,  int squareWidth, int squareHeight) {
-        
-         
+
+    public static void drawSquare(Graphics g, Node node, Color color, int squareWidth, int squareHeight) {
+
         int x = node.col * squareWidth;
         int y = node.row * squareHeight;
-       
+
         g.setColor(color);
         g.fillRect(x + 1, y + 1, squareWidth - 2, squareHeight - 2);
         g.setColor(color.brighter());
@@ -31,5 +30,20 @@ public class Util {
                 y + squareHeight - 1,
                 x + squareWidth - 1, y + 1);
     }
-    
+
+    public static DirectionType getOpositeDirection(DirectionType direction) {
+        switch (direction) {
+            case DOWN:
+                return DirectionType.UP;
+            case UP:
+                return DirectionType.DOWN;
+            case RIGHT:
+                return DirectionType.LEFT;
+            case LEFT:
+                return DirectionType.RIGHT;
+
+        }
+        return null;
+    }
+
 }

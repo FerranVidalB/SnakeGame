@@ -28,20 +28,37 @@ public class Board extends JPanel implements ActionListener {
 
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
+
+                    keyMemory.add(DirectionType.LEFT);
+                    keyPressed = 0;
+
                     if (canTurn) {
-                        if (direction != DirectionType.RIGHT) {
-                        direction = DirectionType.LEFT;
-                        canTurn = false;
+
+                        if (!keyMemory.isEmpty()) {
+                            if (keyMemory.get(0) !=null&& keyMemory.get(0) != Util.getOpositeDirection(direction)) {
+                                direction = keyMemory.get(0);
+
+                                canTurn = false;
+                            }
+                            keyMemory.remove(0);
+                        }
                     }
-                    }else{
-                        
-                    }
-                    
+
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if (direction != DirectionType.LEFT) {
-                        direction = DirectionType.RIGHT;
-                        canTurn = false;
+                    keyMemory.add(DirectionType.RIGHT);
+                    keyPressed = 0;
+
+                    if (canTurn) {
+
+                        if (!keyMemory.isEmpty()) {
+                            if (keyMemory.get(0) !=null&& keyMemory.get(0) != Util.getOpositeDirection(direction)){
+                                direction = keyMemory.get(0);
+
+                                canTurn = false;
+                            }
+                            keyMemory.remove(0);
+                        }
                     }
                     break;
                 case KeyEvent.VK_SPACE:
@@ -49,17 +66,34 @@ public class Board extends JPanel implements ActionListener {
                     break;
 
                 case KeyEvent.VK_UP:
-                    if (direction != DirectionType.DOWN) {
-                        direction = DirectionType.UP;
-                        canTurn = false;
+                    keyMemory.add(DirectionType.UP);
+                    keyPressed = 0;
+                    if (canTurn) {
+
+                        if (!keyMemory.isEmpty()) {
+                            if (keyMemory.get(0) !=null&& keyMemory.get(0) != Util.getOpositeDirection(direction)){
+                                direction = keyMemory.get(0);
+
+                                canTurn = false;
+                            }
+                            keyMemory.remove(0);
+                        }
                     }
 
                     break;
                 case KeyEvent.VK_DOWN:
+                    keyPressed = 0;
+                    keyMemory.add(DirectionType.DOWN);
+                    if (canTurn) {
 
-                    if (direction != DirectionType.UP) {
-                        direction = DirectionType.DOWN;
-                        canTurn = false;
+                        if (!keyMemory.isEmpty()) {
+                            if (keyMemory.get(0) !=null&& keyMemory.get(0) != Util.getOpositeDirection(direction)){
+                                direction = keyMemory.get(0);
+
+                                canTurn = false;
+                            }
+                            keyMemory.remove(0);
+                        }
                     }
 
                     break;
@@ -78,6 +112,18 @@ public class Board extends JPanel implements ActionListener {
                     }
                     break;
                 default:
+                     if (canTurn) {
+
+                        if (!keyMemory.isEmpty()) {
+                            if (keyMemory.get(0) !=null&& keyMemory.get(0) != Util.getOpositeDirection(direction)){
+                                direction = keyMemory.get(0);
+
+                                canTurn = false;
+                            }
+                            keyMemory.remove(0);
+                        }
+                    }
+
                     break;
             }
 
@@ -100,7 +146,7 @@ public class Board extends JPanel implements ActionListener {
     public void setNum_cols(int num_cols) {
         this.num_cols = num_cols;
     }
-     private ArrayList<DirectionType> keyMemory;
+    private ArrayList<DirectionType> keyMemory;
     private boolean canTurn;
     private int num_rows = 30;
     private int num_cols = 40;
@@ -116,6 +162,7 @@ public class Board extends JPanel implements ActionListener {
     private SpecialFood specialFood;
     private int foodGenerator;
     private IncrementScorer scorerDelegate;
+    private int keyPressed;
 
     public Board() {
         super();
@@ -128,7 +175,7 @@ public class Board extends JPanel implements ActionListener {
         currentFood = null;
         specialFood = null;
         canTurn = true;
-        
+        keyMemory = new ArrayList<DirectionType>();
 
     }
 
@@ -161,10 +208,12 @@ public class Board extends JPanel implements ActionListener {
 
     public void initGame() {
         foodGenerator = 0;
+        direction = DirectionType.RIGHT;
         snake = new Snake(new Node(num_rows / 2, num_cols / 2));
         isPlaying = true;
         scorerDelegate.reset();
-
+        keyPressed = 0;
+        keyMemory = new ArrayList<DirectionType>();
         timer.start();
 
     }
@@ -173,9 +222,7 @@ public class Board extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         canTurn = true;
-        if (currentFood == null && specialFood == null) {
-            System.out.println("Board.actionPerformed()");
-        }
+
         generateFood();
 
         if (canMove(direction)) {
@@ -184,6 +231,11 @@ public class Board extends JPanel implements ActionListener {
             timer.stop();
 
         }
+        if (keyPressed == 2) {
+            keyMemory.clear();
+            keyPressed = 0;
+        }
+        keyPressed++;
 
         repaint();
         Toolkit.getDefaultToolkit().sync();
