@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -130,6 +131,11 @@ public class Board extends JPanel implements ActionListener {
         }
 
     }
+    private JFrame parentFrame;
+
+    public void setParentFrame(JFrame parentFrame) {
+        this.parentFrame = parentFrame;
+    }
 
     public int getNum_rows() {
         return num_rows;
@@ -228,7 +234,7 @@ public class Board extends JPanel implements ActionListener {
         if (canMove(direction)) {
             snake.moveTo(direction, hasEaten());
         } else {
-            timer.stop();
+            gameOver();
 
         }
         if (keyPressed == 2) {
@@ -284,7 +290,10 @@ public class Board extends JPanel implements ActionListener {
 
     public void gameOver() {
         timer.stop();
-        scorerDelegate.getScore();
+        scorerDelegate.paintFinalScore();
+        
+        RecordsDialog d = new RecordsDialog(parentFrame, true, scorerDelegate.getScore());
+                    d.setVisible(true);
     }
 
     protected void paintComponent(Graphics g) {

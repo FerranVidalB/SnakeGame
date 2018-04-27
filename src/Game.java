@@ -16,6 +16,7 @@ public class Game extends javax.swing.JFrame {
     public Game() {
         initComponents();
         board2.setScorer(scoreBoard1);
+        board2.setParentFrame(this);
     }
 
     /**
