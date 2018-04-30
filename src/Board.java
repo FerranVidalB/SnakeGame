@@ -36,7 +36,7 @@ public class Board extends JPanel implements ActionListener {
                     if (canTurn) {
 
                         if (!keyMemory.isEmpty()) {
-                            if (keyMemory.get(0) !=null&& keyMemory.get(0) != Util.getOpositeDirection(direction)) {
+                            if (keyMemory.get(0) != null && keyMemory.get(0) != Util.getOpositeDirection(direction)) {
                                 direction = keyMemory.get(0);
 
                                 canTurn = false;
@@ -53,7 +53,7 @@ public class Board extends JPanel implements ActionListener {
                     if (canTurn) {
 
                         if (!keyMemory.isEmpty()) {
-                            if (keyMemory.get(0) !=null&& keyMemory.get(0) != Util.getOpositeDirection(direction)){
+                            if (keyMemory.get(0) != null && keyMemory.get(0) != Util.getOpositeDirection(direction)) {
                                 direction = keyMemory.get(0);
 
                                 canTurn = false;
@@ -72,7 +72,7 @@ public class Board extends JPanel implements ActionListener {
                     if (canTurn) {
 
                         if (!keyMemory.isEmpty()) {
-                            if (keyMemory.get(0) !=null&& keyMemory.get(0) != Util.getOpositeDirection(direction)){
+                            if (keyMemory.get(0) != null && keyMemory.get(0) != Util.getOpositeDirection(direction)) {
                                 direction = keyMemory.get(0);
 
                                 canTurn = false;
@@ -88,7 +88,7 @@ public class Board extends JPanel implements ActionListener {
                     if (canTurn) {
 
                         if (!keyMemory.isEmpty()) {
-                            if (keyMemory.get(0) !=null&& keyMemory.get(0) != Util.getOpositeDirection(direction)){
+                            if (keyMemory.get(0) != null && keyMemory.get(0) != Util.getOpositeDirection(direction)) {
                                 direction = keyMemory.get(0);
 
                                 canTurn = false;
@@ -113,10 +113,10 @@ public class Board extends JPanel implements ActionListener {
                     }
                     break;
                 default:
-                     if (canTurn) {
+                    if (canTurn) {
 
                         if (!keyMemory.isEmpty()) {
-                            if (keyMemory.get(0) !=null&& keyMemory.get(0) != Util.getOpositeDirection(direction)){
+                            if (keyMemory.get(0) != null && keyMemory.get(0) != Util.getOpositeDirection(direction)) {
                                 direction = keyMemory.get(0);
 
                                 canTurn = false;
@@ -154,8 +154,8 @@ public class Board extends JPanel implements ActionListener {
     }
     private ArrayList<DirectionType> keyMemory;
     private boolean canTurn;
-    private int num_rows = 30;
-    private int num_cols = 40;
+    private int num_rows = 0;
+    private int num_cols = 0;
     private DirectionType direction;
     private int deltaTime;
     private int currentCol;
@@ -172,6 +172,7 @@ public class Board extends JPanel implements ActionListener {
 
     public Board() {
         super();
+        BoardSize();
 
         initValues();
         timer = new Timer(deltaTime, this);
@@ -182,6 +183,15 @@ public class Board extends JPanel implements ActionListener {
         specialFood = null;
         canTurn = true;
         keyMemory = new ArrayList<DirectionType>();
+
+    }
+
+    private void BoardSize() {
+        ChoseBoardSize d = new ChoseBoardSize(parentFrame, true);
+        d.setVisible(true);
+        num_cols = d.getNumCols();
+        num_rows = d.getNumRows();
+        specialFood = null;
 
     }
 
@@ -213,6 +223,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public void initGame() {
+
         foodGenerator = 0;
         direction = DirectionType.RIGHT;
         snake = new Snake(new Node(num_rows / 2, num_cols / 2));
@@ -221,6 +232,7 @@ public class Board extends JPanel implements ActionListener {
         keyPressed = 0;
         keyMemory = new ArrayList<DirectionType>();
         timer.start();
+        currentFood = new Food(snake, num_rows, num_cols);
 
     }
 
@@ -291,9 +303,13 @@ public class Board extends JPanel implements ActionListener {
     public void gameOver() {
         timer.stop();
         scorerDelegate.paintFinalScore();
-        
+
         RecordsDialog d = new RecordsDialog(parentFrame, true, scorerDelegate.getScore());
-                    d.setVisible(true);
+        d.setVisible(true);
+        deltaTime = 200;
+        timer.setDelay(deltaTime);
+        BoardSize();
+        initGame();
     }
 
     protected void paintComponent(Graphics g) {

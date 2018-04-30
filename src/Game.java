@@ -1,3 +1,7 @@
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -15,9 +19,11 @@ public class Game extends javax.swing.JFrame {
      */
     public Game() {
         initComponents();
-        board2.setScorer(scoreBoard1);
-        board2.setParentFrame(this);
+        board.setScorer(scoreBoard1);
+        board.setParentFrame(this);
+        board.initGame();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,27 +35,28 @@ public class Game extends javax.swing.JFrame {
     private void initComponents() {
 
         scoreBoard1 = new ScoreBoard();
-        board2 = new Board();
+        board = new Board();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(600, 450));
         getContentPane().add(scoreBoard1, java.awt.BorderLayout.PAGE_END);
 
-        javax.swing.GroupLayout board2Layout = new javax.swing.GroupLayout(board2);
-        board2.setLayout(board2Layout);
-        board2Layout.setHorizontalGroup(
-            board2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+        javax.swing.GroupLayout boardLayout = new javax.swing.GroupLayout(board);
+        board.setLayout(boardLayout);
+        boardLayout.setHorizontalGroup(
+            boardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 414, Short.MAX_VALUE)
         );
-        board2Layout.setVerticalGroup(
-            board2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        boardLayout.setVerticalGroup(
+            boardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 279, Short.MAX_VALUE)
         );
 
-        getContentPane().add(board2, java.awt.BorderLayout.CENTER);
+        getContentPane().add(board, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
 
@@ -72,8 +79,13 @@ public class Game extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-        board2.initGame();
+        try {
+            // TODO add your handling code here:
+            finalize();
+        } catch (Throwable ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        board.initGame();
         
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -114,7 +126,7 @@ public class Game extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private Board board2;
+    private Board board;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
