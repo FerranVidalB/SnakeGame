@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -169,6 +171,8 @@ public class Board extends JPanel implements ActionListener {
     private int foodGenerator;
     private IncrementScorer scorerDelegate;
     private int keyPressed;
+    
+    private Ghost ghost;
 
     public Board() {
         super();
@@ -180,6 +184,7 @@ public class Board extends JPanel implements ActionListener {
         MyKeyAdapter keyb = new MyKeyAdapter();
         addKeyListener(keyb);
         currentFood = null;
+        ghost=null;
         specialFood = null;
         canTurn = true;
         keyMemory = new ArrayList<DirectionType>();
@@ -219,11 +224,14 @@ public class Board extends JPanel implements ActionListener {
                 || nextMove.row < 0 || nextMove.row >= num_rows) {
             return false;
         }
+        if(snake.getHead().isEqual(ghost.getGhostPosition())){
+            return false;
+        }
         return true;
     }
 
     public void initGame() {
-
+        
         foodGenerator = 0;
         direction = DirectionType.RIGHT;
         snake = new Snake(new Node(num_rows / 2, num_cols / 2));
@@ -233,22 +241,34 @@ public class Board extends JPanel implements ActionListener {
         keyMemory = new ArrayList<DirectionType>();
         timer.start();
         currentFood = new Food(snake, num_rows, num_cols);
+        ghost= new Ghost(snake, num_rows, num_cols);
 
     }
 
     //Game Main Loop
     @Override
     public void actionPerformed(ActionEvent ae) {
+        
+        
+        
+        
         canTurn = true;
 
         generateFood();
 
         if (canMove(direction)) {
             snake.moveTo(direction, hasEaten());
+            ghost.moveGhost();
         } else {
-            gameOver();
+            try {
+                gameOver();
+            } catch (InterruptedException ex) {
+               System.err.println();
+            }
+            
 
         }
+        
         if (keyPressed == 2) {
             keyMemory.clear();
             keyPressed = 0;
@@ -300,11 +320,12 @@ public class Board extends JPanel implements ActionListener {
         foodGenerator++;
     }
 
-    public void gameOver() {
+    public void gameOver() throws InterruptedException {
         timer.stop();
         scorerDelegate.paintFinalScore();
 
         RecordsDialog d = new RecordsDialog(parentFrame, true, scorerDelegate.getScore());
+        Thread.sleep(1000);
         d.setVisible(true);
         deltaTime = 200;
         timer.setDelay(deltaTime);
@@ -325,6 +346,9 @@ public class Board extends JPanel implements ActionListener {
         }
         if (specialFood != null) {
             specialFood.draw(g, squareWidth(), squareHeight());
+        }
+        if (ghost != null) {
+            ghost.draw(g, squareWidth(), squareHeight());
         }
         drawBorder(g);
     }

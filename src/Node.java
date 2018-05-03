@@ -16,6 +16,12 @@ public class Node  {
         this.row=row;
         this.col=col;
     }
+    public int getCol(){
+        return col;
+    }
+    public int getRow(){
+        return row;
+    }
     
     public Node decrementCol(){
         this.col--;
@@ -32,6 +38,22 @@ public class Node  {
     public Node incrementRow(){
         this.row++;
         return new Node(row, col);
+    }
+    public void fuseRows(int rowMove){
+        this.row+=rowMove;
+        
+    }
+    public void fuseCols(int colMove){
+       
+        this.col+=colMove;
+    }
+    public void revertFuseRows(int rowMove){
+        this.row-=rowMove;
+        
+    }
+    public void revertFuseCols(int colMove){
+       
+        this.col-=colMove;
     }
 
    

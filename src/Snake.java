@@ -2,6 +2,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class Snake {
 
     private ArrayList<Node> body;
+    private HashMap<Node,DirectionType> body1;
     private int increaseLength;
 
     public Snake(Node start) {
@@ -24,6 +26,7 @@ public class Snake {
     }
 
     public void initSnake(Node start) {
+        
         body.add(new Node(start.row, start.col));
         body.add(new Node(start.row, start.col - 1));
         body.add(new Node(start.row, start.col - 2));
