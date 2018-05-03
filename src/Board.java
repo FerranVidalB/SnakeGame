@@ -171,7 +171,7 @@ public class Board extends JPanel implements ActionListener {
     private int foodGenerator;
     private IncrementScorer scorerDelegate;
     private int keyPressed;
-    
+
     private Ghost ghost;
 
     public Board() {
@@ -184,7 +184,7 @@ public class Board extends JPanel implements ActionListener {
         MyKeyAdapter keyb = new MyKeyAdapter();
         addKeyListener(keyb);
         currentFood = null;
-        ghost=null;
+        ghost = null;
         specialFood = null;
         canTurn = true;
         keyMemory = new ArrayList<DirectionType>();
@@ -224,14 +224,14 @@ public class Board extends JPanel implements ActionListener {
                 || nextMove.row < 0 || nextMove.row >= num_rows) {
             return false;
         }
-        if(snake.getHead().isEqual(ghost.getGhostPosition())){
+        if (snake.getHead().isEqual(ghost.getGhostPosition())) {
             return false;
         }
         return true;
     }
 
     public void initGame() {
-        
+
         foodGenerator = 0;
         direction = DirectionType.RIGHT;
         snake = new Snake(new Node(num_rows / 2, num_cols / 2));
@@ -241,17 +241,15 @@ public class Board extends JPanel implements ActionListener {
         keyMemory = new ArrayList<DirectionType>();
         timer.start();
         currentFood = new Food(snake, num_rows, num_cols);
-        ghost= new Ghost(snake, num_rows, num_cols);
+        ghost = new Ghost(snake, num_rows, num_cols, currentFood, specialFood);
 
     }
 
     //Game Main Loop
     @Override
     public void actionPerformed(ActionEvent ae) {
-        
-        
-        
-        
+
+        ghostHasEaten();
         canTurn = true;
 
         generateFood();
@@ -259,16 +257,16 @@ public class Board extends JPanel implements ActionListener {
         if (canMove(direction)) {
             snake.moveTo(direction, hasEaten());
             ghost.moveGhost();
+
         } else {
             try {
                 gameOver();
             } catch (InterruptedException ex) {
-               System.err.println();
+                System.err.println();
             }
-            
 
         }
-        
+
         if (keyPressed == 2) {
             keyMemory.clear();
             keyPressed = 0;
@@ -280,6 +278,26 @@ public class Board extends JPanel implements ActionListener {
 
     }
 
+   public void ghostHasEaten() {
+
+        if (currentFood != null && currentFood.getFoodPosition().isEqual(ghost.getGhostPosition())) {
+            currentFood = null;
+            scorerDelegate.increment(-12);
+            
+        }
+    
+
+        if (specialFood != null && specialFood.getFoodPosition().isEqual(ghost.getGhostPosition())) {
+            specialFood = null;
+            scorerDelegate.increment(-50);
+            
+
+          
+        }
+
+       
+    }
+
     public boolean hasEaten() {
 
         if (currentFood != null && currentFood.getFoodPosition().isEqual(snake.getHead())) {
@@ -289,8 +307,10 @@ public class Board extends JPanel implements ActionListener {
                 scorerDelegate.incrementLevel();
                 decrementDelay();
             }
+
             return true;
         }
+    
 
         if (specialFood != null && specialFood.getFoodPosition().isEqual(snake.getHead())) {
             specialFood = null;
@@ -299,8 +319,10 @@ public class Board extends JPanel implements ActionListener {
                 scorerDelegate.incrementLevel();
                 decrementDelay();
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -317,7 +339,9 @@ public class Board extends JPanel implements ActionListener {
                 currentFood = new Food(snake, num_rows, num_cols);
             }
         }
+
         foodGenerator++;
+        ghost.setFoods(currentFood, specialFood);
     }
 
     public void gameOver() throws InterruptedException {
