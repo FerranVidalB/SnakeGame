@@ -1,3 +1,7 @@
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,21 +16,27 @@ public class ChoseBoardSize extends javax.swing.JDialog {
 
     private int num_rows;
     private int num_cols;
-    
-    public int getNumRows(){
+
+    public int getNumRows() {
         return num_rows;
     }
-    public int getNumCols(){
+
+    public int getNumCols() {
         return num_cols;
     }
+
     /**
      * Creates new form ChoseBoardSize
      */
     public ChoseBoardSize(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        num_cols=40;
-        num_rows=30;
+        num_cols = 40;
+        num_rows = 30;
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
+        setLocation((int)(height/2)-getHeight()/2, (int)(width/2)-getWidth()-2);
     }
 
     /**
@@ -109,23 +119,23 @@ public class ChoseBoardSize extends javax.swing.JDialog {
 
     private void bSmallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSmallActionPerformed
         // TODO add your handling code here:
-        num_rows=15;
-        num_cols=20;
-        
+        num_rows = 15;
+        num_cols = 20;
+
         dispose();
     }//GEN-LAST:event_bSmallActionPerformed
 
     private void bMediumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMediumActionPerformed
         // TODO add your handling code here:
-        num_rows=30;
-        num_cols=40;
+        num_rows = 30;
+        num_cols = 40;
         dispose();
     }//GEN-LAST:event_bMediumActionPerformed
 
     private void bBigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBigActionPerformed
         // TODO add your handling code here:
-        num_rows=45;
-        num_cols=60;
+        num_rows = 45;
+        num_cols = 60;
         dispose();
     }//GEN-LAST:event_bBigActionPerformed
 

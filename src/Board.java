@@ -102,11 +102,14 @@ public class Board extends JPanel implements ActionListener {
                     break;
                 case KeyEvent.VK_P:
                     if (isPlaying) {
+                        System.out.println(getLocationOnScreen());
                         if (timer.isRunning()) {
                             timer.stop();
-                        } else {
+
+                            MenuPause menuPause = new MenuPause(parentFrame, true,(int)(getWidth()/2.5)+getLocationOnScreen().x,getHeight()/2+getLocationOnScreen().y-50);
+                            menuPause.setVisible(true);
                             timer.start();
-                        }
+                        } 
                     }
                     break;
                 case KeyEvent.VK_ENTER:
@@ -278,24 +281,20 @@ public class Board extends JPanel implements ActionListener {
 
     }
 
-   public void ghostHasEaten() {
+    public void ghostHasEaten() {
 
         if (currentFood != null && currentFood.getFoodPosition().isEqual(ghost.getGhostPosition())) {
             currentFood = null;
             scorerDelegate.increment(-12);
-            
+
         }
-    
 
         if (specialFood != null && specialFood.getFoodPosition().isEqual(ghost.getGhostPosition())) {
             specialFood = null;
             scorerDelegate.increment(-50);
-            
 
-          
         }
 
-       
     }
 
     public boolean hasEaten() {
@@ -310,7 +309,6 @@ public class Board extends JPanel implements ActionListener {
 
             return true;
         }
-    
 
         if (specialFood != null && specialFood.getFoodPosition().isEqual(snake.getHead())) {
             specialFood = null;
