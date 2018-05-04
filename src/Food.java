@@ -1,6 +1,9 @@
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -40,8 +43,14 @@ public class Food {
         return position;
     }
     public void draw(Graphics g, int squareWidth, int squareHeight) {
-      
-                Util.drawSquare(g, position, Color.GREEN, squareWidth, squareHeight);
+       Image image=null;
+        try {
+            image = ImageIO.read(getClass().getClassLoader().getResource("resources/food.png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+           
+        Util.drawImage(g, position, image, squareWidth, squareHeight);
     
 
     }

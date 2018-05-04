@@ -1,14 +1,17 @@
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -102,14 +105,14 @@ public class Board extends JPanel implements ActionListener {
                     break;
                 case KeyEvent.VK_P:
                     if (isPlaying) {
-                        System.out.println(getLocationOnScreen());
+
                         if (timer.isRunning()) {
                             timer.stop();
 
-                            MenuPause menuPause = new MenuPause(parentFrame, true,(int)(getWidth()/2.5)+getLocationOnScreen().x,getHeight()/2+getLocationOnScreen().y-50);
+                            MenuPause menuPause = new MenuPause(parentFrame, true, (int) (getWidth() / 2.5) + getLocationOnScreen().x, getHeight() / 2 + getLocationOnScreen().y - 50);
                             menuPause.setVisible(true);
                             timer.start();
-                        } 
+                        }
                     }
                     break;
                 case KeyEvent.VK_ENTER:
@@ -191,7 +194,17 @@ public class Board extends JPanel implements ActionListener {
         specialFood = null;
         canTurn = true;
         keyMemory = new ArrayList<DirectionType>();
+        
 
+    }
+    private void drawBoard(Graphics g){
+         Image image=null;
+        try {
+            image = ImageIO.read(getClass().getClassLoader().getResource("resources/bg.png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        Util.drawImage(g, new Node(0, 0), image,getWidth(), getHeight());
     }
 
     private void BoardSize() {
@@ -199,6 +212,9 @@ public class Board extends JPanel implements ActionListener {
         d.setVisible(true);
         num_cols = d.getNumCols();
         num_rows = d.getNumRows();
+        
+
+       
         specialFood = null;
 
     }
@@ -358,6 +374,7 @@ public class Board extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         //drawBoard(g);
+        drawBoard(g);
         if (snake != null) {
 
             snake.draw(g, squareWidth(), squareHeight());

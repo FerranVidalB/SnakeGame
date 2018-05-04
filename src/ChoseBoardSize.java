@@ -13,7 +13,7 @@ import java.awt.Toolkit;
  * @author alu20925473g
  */
 public class ChoseBoardSize extends javax.swing.JDialog {
-
+    private BoardSize boardSize;
     private int num_rows;
     private int num_cols;
 
@@ -33,10 +33,8 @@ public class ChoseBoardSize extends javax.swing.JDialog {
         initComponents();
         num_cols = 40;
         num_rows = 30;
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-        setLocation((int)(height/2)-getHeight()/2, (int)(width/2)-getWidth()-2);
+        boardSize=null;
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -121,7 +119,7 @@ public class ChoseBoardSize extends javax.swing.JDialog {
         // TODO add your handling code here:
         num_rows = 15;
         num_cols = 20;
-
+        boardSize=BoardSize.SMALL;
         dispose();
     }//GEN-LAST:event_bSmallActionPerformed
 
@@ -129,6 +127,7 @@ public class ChoseBoardSize extends javax.swing.JDialog {
         // TODO add your handling code here:
         num_rows = 30;
         num_cols = 40;
+        boardSize=BoardSize.MEDIUM;
         dispose();
     }//GEN-LAST:event_bMediumActionPerformed
 
@@ -136,9 +135,12 @@ public class ChoseBoardSize extends javax.swing.JDialog {
         // TODO add your handling code here:
         num_rows = 45;
         num_cols = 60;
+        boardSize=BoardSize.BIG;
         dispose();
     }//GEN-LAST:event_bBigActionPerformed
-
+    public BoardSize getBoardSize(){
+        return boardSize;
+    }
     /**
      * @param args the command line arguments
      */

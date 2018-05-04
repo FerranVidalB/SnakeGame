@@ -1,7 +1,10 @@
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.io.IOException;
 import java.util.Random;
+import javax.imageio.ImageIO;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -20,7 +23,7 @@ public class SpecialFood {
     private Node position;
 
     public SpecialFood(Snake snake, int totalRows, int totalCols) {
-        
+        paint =1;
         boolean colisionWithSnake = true;
 
         while (colisionWithSnake) {
@@ -44,17 +47,17 @@ public class SpecialFood {
     }
 
     public void draw(Graphics g, int squareWidth, int squareHeight) {
-        if (paint == 3 || paint == 4 || paint == 5) {
-            Random random = new Random();
-            int r = random.nextInt(255);
-            int j = random.nextInt(255);
-            int b = random.nextInt(255);
-            Color c= new Color(r, j, b);
-            Util.drawSquare(g, position, c, squareWidth, squareHeight);
+        Image image=null;
+        try {
+            image = ImageIO.read(getClass().getClassLoader().getResource("resources/sfood"+paint+".png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
+           
+        Util.drawImage(g, position, image, squareWidth, squareHeight);
         paint++;
-        if (paint == 6) {
-            paint = 0;
+        if(paint==4){
+            paint =1;
         }
 
     }

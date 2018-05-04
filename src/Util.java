@@ -1,6 +1,10 @@
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.ImageObserver;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -45,5 +49,13 @@ public class Util {
         }
         return null;
     }
+    public static void drawImage(Graphics g, Node node, Image image, int squareWidth, int squareHeight) {
 
+        int x = node.col * squareWidth;
+        int y = node.row * squareHeight;
+        g.drawImage(image, x, y, squareWidth, squareHeight, null);
+       
+     
+    }
+  
 }

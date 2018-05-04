@@ -19,9 +19,12 @@ public class Game extends javax.swing.JFrame {
      */
     public Game() {
         initComponents();
+        setLocationRelativeTo(null);
         board.setScorer(scoreBoard1);
         board.setParentFrame(this);
         board.initGame();
+        setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
+        //setSize(40*40, 30*40);
     }
     
 
@@ -121,6 +124,7 @@ public class Game extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Game().setVisible(true);
+                
             }
         });
     }

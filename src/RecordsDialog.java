@@ -46,6 +46,7 @@ public class RecordsDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         initRecordLabels();
+        setLocationRelativeTo(null);
         minRecord = 0;
         this.score = score;
         listofRecords = new ArrayList<Record>();
