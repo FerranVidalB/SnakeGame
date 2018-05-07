@@ -1,5 +1,6 @@
 
 import java.awt.Color;
+import java.awt.Dimension;
 import javax.swing.JLabel;
 
 /*
@@ -31,7 +32,7 @@ public class ScoreBoard extends JLabel implements IncrementScorer {
 
     public void reset() {
         score = 0;
-        
+        setForeground(Color.BLACK);
         level = 1;
        setText("Score: " + score+"  Level: "+level);
     }

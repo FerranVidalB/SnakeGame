@@ -175,6 +175,7 @@ public class Ghost {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        
            
         Util.drawImage(g, position, image, squareWidth, squareHeight);
         

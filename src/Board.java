@@ -375,21 +375,23 @@ public class Board extends JPanel implements ActionListener {
         super.paintComponent(g);
         //drawBoard(g);
         drawBoard(g);
-        if (snake != null) {
-
-            snake.draw(g, squareWidth(), squareHeight());
-
-        }
         if (currentFood != null) {
             currentFood.draw(g, squareWidth(), squareHeight());
         }
         if (specialFood != null) {
             specialFood.draw(g, squareWidth(), squareHeight());
         }
+        if (snake != null) {
+
+            snake.draw(g, squareWidth(), squareHeight(),direction);
+
+        }
+        
         if (ghost != null) {
             ghost.draw(g, squareWidth(), squareHeight());
         }
-        drawBorder(g);
+        
+        //drawBorder(g);
     }
 
     public void drawBorder(Graphics g) {

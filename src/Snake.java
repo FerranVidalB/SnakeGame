@@ -1,8 +1,11 @@
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.imageio.ImageIO;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -94,17 +97,29 @@ public class Snake {
         return null;
     }
 
-    public void draw(Graphics g, int squareWidth, int squareHeight) {
+    public void draw(Graphics g, int squareWidth, int squareHeight, DirectionType direction) {
         int i = 0;
         for (Node part : body) {
             if (i == 0) {
-                Util.drawSquare(g, part, Color.RED, squareWidth, squareHeight);
+                drawHead(g, squareWidth, squareHeight, part, direction);
             } else {
-                Util.drawSquare(g, part, Color.PINK, squareWidth, squareHeight);
+                Util.drawSquare(g, part, Color.GREEN.darker().darker(), squareWidth, squareHeight);
             }
             i++;
 
         }
 
+    }
+    public void drawHead(Graphics g, int squareWidth, int squareHeight, Node head, DirectionType direction) {
+        Image image=null;
+        try {
+            image = ImageIO.read(getClass().getClassLoader().getResource("resources/snake"+direction+".png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+           
+        Util.drawImage(g, head, image, squareWidth, squareHeight);
+        
     }
 }
