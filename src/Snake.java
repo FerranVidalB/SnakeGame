@@ -19,17 +19,17 @@ import javax.imageio.ImageIO;
 public class Snake {
 
     private ArrayList<Node> body;
-    private HashMap<Node,DirectionType> body1;
+    private HashMap<Node, DirectionType> body1;
     private int increaseLength;
 
     public Snake(Node start) {
         body = new ArrayList<Node>();
-        increaseLength=0;
+        increaseLength = 0;
         initSnake(start);
     }
 
     public void initSnake(Node start) {
-        
+
         body.add(new Node(start.row, start.col));
         body.add(new Node(start.row, start.col - 1));
         body.add(new Node(start.row, start.col - 2));
@@ -41,42 +41,41 @@ public class Snake {
     public ArrayList<Node> getNodes() {
         return body;
     }
-    public Node getHead(){
+
+    public Node getHead() {
         return body.get(0);
     }
 
     public void moveTo(DirectionType direction, boolean increase) {
-        if(increase){
-        increaseLength+=4;
+        if (increase) {
+            increaseLength += 4;
         }
         Node head = body.get(0);
         switch (direction) {
             case RIGHT:
                 body.add(0, new Node(head.row, head.col + 1));
-               
 
                 break;
             case LEFT:
                 body.add(0, new Node(head.row, head.col - 1));
-                
+
                 break;
             case UP:
                 body.add(0, new Node(head.row - 1, head.col));
-                
+
                 break;
             case DOWN:
                 body.add(0, new Node(head.row + 1, head.col));
-                
+
                 break;
 
         }
-        if(increaseLength==0){
-         body.remove(body.size() - 1);
-        }else{
+        if (increaseLength == 0) {
+            body.remove(body.size() - 1);
+        } else {
             increaseLength--;
         }
     }
-     
 
     public Node nextMove(DirectionType direction) {
         Node head = body.get(0);
@@ -97,11 +96,11 @@ public class Snake {
         return null;
     }
 
-    public void draw(Graphics g, int squareWidth, int squareHeight, DirectionType direction) {
+    public void draw(Graphics g, int squareWidth, int squareHeight, DirectionType direction, boolean alive) {
         int i = 0;
         for (Node part : body) {
             if (i == 0) {
-                drawHead(g, squareWidth, squareHeight, part, direction);
+                drawHead(g, squareWidth, squareHeight, part, direction, alive);
             } else {
                 Util.drawSquare(g, part, Color.GREEN.darker().darker(), squareWidth, squareHeight);
             }
@@ -110,16 +109,23 @@ public class Snake {
         }
 
     }
-    public void drawHead(Graphics g, int squareWidth, int squareHeight, Node head, DirectionType direction) {
-        Image image=null;
+
+    public void drawHead(Graphics g, int squareWidth, int squareHeight, Node head, DirectionType direction, boolean alive) {
+        Image image = null;
+        String state = "";
         try {
-            image = ImageIO.read(getClass().getClassLoader().getResource("resources/snake"+direction+".png"));
+            if (alive) {
+                state = "snake";
+            } else {
+                state = "dead";
+            }
+
+            image = ImageIO.read(getClass().getClassLoader().getResource("resources/"+state + direction + ".png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        
-           
+
         Util.drawImage(g, head, image, squareWidth, squareHeight);
-        
+
     }
 }

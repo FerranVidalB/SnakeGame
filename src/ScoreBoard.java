@@ -27,14 +27,14 @@ public class ScoreBoard extends JLabel implements IncrementScorer {
 
     public void increment(int points) {
         score += points;
-        setText("Score: " + score+"  Level: "+level);
+        setText("Score: " + score+"  Speed Level: "+level);
     }
 
     public void reset() {
         score = 0;
         setForeground(Color.BLACK);
         level = 1;
-       setText("Score: " + score+"  Level: "+level);
+       setText("Score: " + score+"  Speed Level: "+level);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ScoreBoard extends JLabel implements IncrementScorer {
     }
     public void incrementLevel(){
         level++;
-         setText("Score: " + score+ "  Level: "+level);
+         setText("Score: " + score+ "  Speed Level: "+level);
     }
    
 

@@ -46,6 +46,8 @@ public class Game extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(600, 450));
+
+        scoreBoard1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         getContentPane().add(scoreBoard1, java.awt.BorderLayout.PAGE_END);
 
         javax.swing.GroupLayout boardLayout = new javax.swing.GroupLayout(board);

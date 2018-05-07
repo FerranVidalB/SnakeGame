@@ -177,7 +177,7 @@ public class Board extends JPanel implements ActionListener {
     private int foodGenerator;
     private IncrementScorer scorerDelegate;
     private int keyPressed;
-
+    private boolean alive;
     private Ghost ghost;
 
     public Board() {
@@ -261,6 +261,7 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
         currentFood = new Food(snake, num_rows, num_cols);
         ghost = new Ghost(snake, num_rows, num_cols, currentFood, specialFood);
+        alive=true;
 
     }
 
@@ -329,7 +330,7 @@ public class Board extends JPanel implements ActionListener {
         if (specialFood != null && specialFood.getFoodPosition().isEqual(snake.getHead())) {
             specialFood = null;
             scorerDelegate.increment(50);
-            if (scorerDelegate.getScore() > scorerDelegate.getLevel() * 500) {
+            if (scorerDelegate.getScore() > scorerDelegate.getLevel() * 50) {
                 scorerDelegate.incrementLevel();
                 decrementDelay();
             }
@@ -359,11 +360,13 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public void gameOver() throws InterruptedException {
+        alive=false;
+        repaint();
         timer.stop();
         scorerDelegate.paintFinalScore();
 
         RecordsDialog d = new RecordsDialog(parentFrame, true, scorerDelegate.getScore());
-        Thread.sleep(1000);
+        Thread.sleep(500);
         d.setVisible(true);
         deltaTime = 200;
         timer.setDelay(deltaTime);
@@ -383,7 +386,7 @@ public class Board extends JPanel implements ActionListener {
         }
         if (snake != null) {
 
-            snake.draw(g, squareWidth(), squareHeight(),direction);
+            snake.draw(g, squareWidth(), squareHeight(),direction,alive);
 
         }
         
