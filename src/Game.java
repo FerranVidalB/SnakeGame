@@ -127,6 +127,7 @@ public class Game extends javax.swing.JFrame {
             public void run() {
                 new Game().setVisible(true);
                 
+                
             }
         });
     }

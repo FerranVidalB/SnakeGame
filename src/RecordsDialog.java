@@ -1,6 +1,7 @@
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -13,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -45,8 +47,16 @@ public class RecordsDialog extends javax.swing.JDialog {
     /**
      * Creates new form RecordsDialog
      */
-    public RecordsDialog(java.awt.Frame parent, boolean modal, int score) {
+    public RecordsDialog(java.awt.Frame parent, boolean modal, int score) throws IOException {
         super(parent, modal);
+        Image backgroundImage =  ImageIO.read(RecordsDialog.class.getResource("resources/died.jpg"));
+        JPanel p = new JPanel(){
+            @Override
+            public void paintComponent(Graphics g){
+                g.drawImage(backgroundImage,0,0,getWidth(),getHeight(),this);
+            }
+        };
+        setContentPane(p);
         initComponents();
         initRecordLabels();
         setLocationRelativeTo(null);
@@ -59,7 +69,8 @@ public class RecordsDialog extends javax.swing.JDialog {
             ex.printStackTrace();
         }
         processRecord();
-        repaint();
+         
+       
     }
 
     public void processRecord() {
@@ -118,15 +129,16 @@ public class RecordsDialog extends javax.swing.JDialog {
         jLabelRecord5 = new javax.swing.JLabel();
         jButtonOK = new javax.swing.JButton();
         bCancel = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(600, 450));
 
         jLabelName.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabelName.setForeground(new java.awt.Color(255, 255, 255));
         jLabelName.setText("Name:");
 
         jTextFieldName.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jTextFieldName.setForeground(new java.awt.Color(255, 255, 255));
         jTextFieldName.setText("InsertName");
         jTextFieldName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -135,21 +147,27 @@ public class RecordsDialog extends javax.swing.JDialog {
         });
 
         jLabelCurrentScore.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        jLabelCurrentScore.setForeground(new java.awt.Color(255, 255, 255));
         jLabelCurrentScore.setText("jLabel2");
 
         jLabelRecord1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabelRecord1.setForeground(new java.awt.Color(255, 255, 255));
         jLabelRecord1.setText("0: NoName");
 
         jLabelRecord2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabelRecord2.setForeground(new java.awt.Color(255, 255, 255));
         jLabelRecord2.setText("0: NoName");
 
         jLabelRecord3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabelRecord3.setForeground(new java.awt.Color(255, 255, 255));
         jLabelRecord3.setText("0: NoName");
 
         jLabelRecord4.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabelRecord4.setForeground(new java.awt.Color(255, 255, 255));
         jLabelRecord4.setText("0: NoName");
 
         jLabelRecord5.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabelRecord5.setForeground(new java.awt.Color(255, 255, 255));
         jLabelRecord5.setText("0: NoName");
 
         jButtonOK.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
@@ -168,8 +186,6 @@ public class RecordsDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setText("jLabel1");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -187,15 +203,12 @@ public class RecordsDialog extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelCurrentScore, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabelRecord1, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-                                    .addComponent(jLabelRecord2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabelRecord3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabelRecord4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabelRecord5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(127, 127, 127)
-                                .addComponent(jLabel1)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabelRecord1, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                                .addComponent(jLabelRecord2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabelRecord3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabelRecord4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabelRecord5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -209,15 +222,9 @@ public class RecordsDialog extends javax.swing.JDialog {
                         .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelCurrentScore, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabelRecord1)
-                                .addGap(18, 18, 18))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(80, 80, 80)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                        .addComponent(jLabelRecord1)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabelRecord2)
                         .addGap(18, 18, 18)
                         .addComponent(jLabelRecord3)
@@ -271,14 +278,10 @@ public class RecordsDialog extends javax.swing.JDialog {
             }
         }
     }
-    protected void paintComponent(Graphics g) {
-        
+    protected void paintComponent(Graphics g) throws IOException {
+       
          Image image=null;
-        try {
-            image = ImageIO.read(getClass().getClassLoader().getResource("resources/died.jpg"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        
         Util.drawImage(g, new Node(0, 0), image,getWidth(), getHeight());
     
     }
@@ -323,7 +326,6 @@ public class RecordsDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bCancel;
     private javax.swing.JButton jButtonOK;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelCurrentScore;
     private javax.swing.JLabel jLabelName;
     private javax.swing.JLabel jLabelRecord1;

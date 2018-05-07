@@ -212,7 +212,9 @@ public class Board extends JPanel implements ActionListener {
         d.setVisible(true);
         num_cols = d.getNumCols();
         num_rows = d.getNumRows();
-        
+        if(num_cols==0 || num_rows==0){
+            System.exit(0);
+        }
 
        
         specialFood = null;
@@ -226,7 +228,7 @@ public class Board extends JPanel implements ActionListener {
     public void initValues() {
         setFocusable(true);
 
-        deltaTime = 200;
+        deltaTime = 150;
         direction = DirectionType.RIGHT;
 
     }
@@ -302,13 +304,13 @@ public class Board extends JPanel implements ActionListener {
 
         if (currentFood != null && currentFood.getFoodPosition().isEqual(ghost.getGhostPosition())) {
             currentFood = null;
-            scorerDelegate.increment(-12);
+            scorerDelegate.increment(-6);
 
         }
 
         if (specialFood != null && specialFood.getFoodPosition().isEqual(ghost.getGhostPosition())) {
             specialFood = null;
-            scorerDelegate.increment(-50);
+            scorerDelegate.increment(-25);
 
         }
 
@@ -365,10 +367,15 @@ public class Board extends JPanel implements ActionListener {
         timer.stop();
         scorerDelegate.paintFinalScore();
 
-        RecordsDialog d = new RecordsDialog(parentFrame, true, scorerDelegate.getScore());
+        RecordsDialog d=null;
+        try {
+            d = new RecordsDialog(parentFrame, true, scorerDelegate.getScore());
+        } catch (IOException ex) {
+            Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Thread.sleep(500);
         d.setVisible(true);
-        deltaTime = 200;
+        deltaTime = 150;
         timer.setDelay(deltaTime);
         BoardSize();
         initGame();

@@ -31,8 +31,8 @@ public class ChoseBoardSize extends javax.swing.JDialog {
     public ChoseBoardSize(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        num_cols = 40;
-        num_rows = 30;
+        num_cols = 0;
+        num_rows = 0;
         boardSize=null;
         setLocationRelativeTo(null);
     }
