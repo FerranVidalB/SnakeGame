@@ -193,7 +193,7 @@ public class Board extends JPanel implements ActionListener {
         addKeyListener(keyb);
         currentFood = null;
         //ghost = null;
-        initializeGhosts();
+        
         specialFood = null;
         canTurn = true;
         keyMemory = new ArrayList<DirectionType>();
@@ -244,7 +244,7 @@ public class Board extends JPanel implements ActionListener {
     public void initValues() {
         setFocusable(true);
 
-        deltaTime = 150;
+        deltaTime = 80;
         direction = DirectionType.RIGHT;
 
     }
@@ -270,7 +270,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public void initGame() {
-
+initializeGhosts();
         foodGenerator = 0;
         direction = DirectionType.RIGHT;
         snake = new Snake(new Node(num_rows / 2, num_cols / 2));
@@ -378,7 +378,7 @@ public class Board extends JPanel implements ActionListener {
             scorerDelegate.increment(12);
             if (scorerDelegate.getScore() > scorerDelegate.getLevel() * 50) {
                 scorerDelegate.incrementLevel();
-                decrementDelay();
+                
             }
 
             return true;
@@ -389,7 +389,7 @@ public class Board extends JPanel implements ActionListener {
             scorerDelegate.increment(50);
             if (scorerDelegate.getScore() > scorerDelegate.getLevel() * 50) {
                 scorerDelegate.incrementLevel();
-                decrementDelay();
+                
             }
 
             return true;
@@ -398,10 +398,7 @@ public class Board extends JPanel implements ActionListener {
         return false;
     }
 
-    public void decrementDelay() {
-        deltaTime *= 0.8;
-        timer.setDelay(deltaTime);
-    }
+   
 
     public void generateFood() {
         if (foodGenerator % 5 == 0 && currentFood == null && specialFood == null) {
@@ -432,7 +429,7 @@ public class Board extends JPanel implements ActionListener {
         }
         Thread.sleep(500);
         d.setVisible(true);
-        deltaTime = 150;
+        deltaTime = 80;
         timer.setDelay(deltaTime);
         boardSize();
         initGame();
