@@ -17,29 +17,34 @@ import javax.imageio.ImageIO;
  */
 public class SpecialFood {
 
-  
     private int paint;
 
     private Node position;
 
-    public SpecialFood(Snake snake, int totalRows, int totalCols) {
-        paint =1;
-        boolean colisionWithSnake = true;
+    public SpecialFood(Snake snake, int totalRows, int totalCols, Ghost... ghosts) {
+        paint = 1;
+        boolean colision = true;
 
-        while (colisionWithSnake) {
-            colisionWithSnake = false;
+        while (colision) {
+            colision = false;
             int row = (int) (Math.random() * totalRows);
             int col = (int) (Math.random() * totalCols);
             position = new Node(row, col);
 
             for (Node body : snake.getNodes()) {
                 if (body.isEqual(position)) {
-                    colisionWithSnake = true;
+                    colision = true;
+                }
+            }
+             for (Ghost g : ghosts) {
+                if (g != null) {
+                    if (g.getGhostPosition().isEqual(position)) {
+                        colision = true;
+                    }
                 }
             }
 
         }
-
     }
 
     public Node getFoodPosition() {
@@ -47,17 +52,17 @@ public class SpecialFood {
     }
 
     public void draw(Graphics g, int squareWidth, int squareHeight) {
-        Image image=null;
+        Image image = null;
         try {
-            image = ImageIO.read(getClass().getClassLoader().getResource("resources/sfood"+paint+".png"));
+            image = ImageIO.read(getClass().getClassLoader().getResource("resources/sfood" + paint + ".png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-           
+
         Util.drawImage(g, position, image, squareWidth, squareHeight);
         paint++;
-        if(paint==4){
-            paint =1;
+        if (paint == 4) {
+            paint = 1;
         }
 
     }

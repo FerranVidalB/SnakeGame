@@ -19,47 +19,30 @@ import javax.imageio.ImageIO;
  * @author alu20925473g
  */
 public class Ghost {
-    
+
     private Node position;
     private Snake snake;
     private int totalRows;
     private int totalCols;
     private Food food;
     private SpecialFood specialFood;
-    
-    public Ghost(Snake snake, int totalRows, int totalCols, Food food, SpecialFood specialFood) {
-        this.snake = snake;
-        this.totalCols = totalCols;
-        this.totalRows = totalRows;
-        this.food = food;
-        this.specialFood = specialFood;
-        
-        boolean colisionWithSnake = true;
-        
-        while (colisionWithSnake) {
-            colisionWithSnake = false;
-            int row = (int) (Math.random() * totalRows);
-            int col = (int) (Math.random() * totalCols);
-            position = new Node(row, col);
-            for (DirectionType direction : DirectionType.values()) {
-                if (snake.getHead().equals(snake.nextMove(direction))) {
-                    colisionWithSnake = true;
-                }
-            }
-            
-            for (Node body : snake.getNodes()) {
-                if (body.isEqual(position)) {
-                    colisionWithSnake = true;
-                }
-            }
-            
-        }
-        
+    private int id;
+    private Ghost[]otherGhosts;
+
+    public Ghost(Node node, Snake snake, int rows, int cols,int id) {
+        this.id=id;
+        this.snake=snake;
+        totalRows=rows;
+        totalCols=cols;
+        position = node;
+    }
+    public int getId(){
+        return id;
     }
 
     private Node getFoodPosition() {
         Node foodPosition = null;
-        
+
         if (food != null) {
             foodPosition = food.getFoodPosition();
         } else {
@@ -121,19 +104,23 @@ public class Ghost {
             }
         }
     }
+    public void setOtherGhosts(Ghost...ghosts){
+    otherGhosts=ghosts;
+}
     
+
     public void moveGhost() {
-        
-        boolean colisionWithSnake = true;
-        
-        while (colisionWithSnake) {
-            colisionWithSnake = false;
-            
+
+        boolean colision = true;
+
+        while (colision) {
+            colision = false;
+
             Node foodPosition = getFoodPosition();
-            
+
             int row = getIncrementRow(foodPosition);
             int col = getIncrementCol(foodPosition);
-            
+
             int noMove = (int) (Math.random() * 20);
             if (noMove == 8) {
                 row = 0;
@@ -142,42 +129,51 @@ public class Ghost {
             int par = (int) (Math.random() * 2);
             changePosition(row, col, par);
             
-            for (Node body : snake.getNodes()) {
-                if (body.isEqual(position)) {
-                    colisionWithSnake = true;
+                for (Node body : snake.getNodes()) {
+                    if (body.isEqual(position)) {
+                        colision = true;
+                    }
                 }
-            }
+                for(Ghost g:otherGhosts){
+                    if(g.getId()!=id){
+                        if(g.getGhostPosition().isEqual(position)){
+                            colision=true;
+                        }
+                    }
+                }
             
-            if (colisionWithSnake) {
+
+            if (colision) {
                 revertPosition(row, col, par);
             }
-            if (snake.getHead().isEqual(position)) {
-                colisionWithSnake = false;
-            }
             
+                if (snake.getHead().isEqual(position)) {
+                    colision = false;
+                }
+            
+
         }
-        
+
     }
-    
+
     public Node getGhostPosition() {
         return position;
     }
-    
+
     public void setFoods(Food food, SpecialFood specialFood) {
         this.food = food;
         this.specialFood = specialFood;
     }
-    
+
     public void draw(Graphics g, int squareWidth, int squareHeight) {
-        Image image=null;
+        Image image = null;
         try {
-            image = ImageIO.read(getClass().getClassLoader().getResource("resources/ghost.png"));
+            image = ImageIO.read(getClass().getClassLoader().getResource("resources/ghost"+id+".png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        
-           
+
         Util.drawImage(g, position, image, squareWidth, squareHeight);
-        
+
     }
 }

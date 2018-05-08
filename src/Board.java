@@ -179,10 +179,12 @@ public class Board extends JPanel implements ActionListener {
     private int keyPressed;
     private boolean alive;
     private Ghost ghost;
+    private Ghost[] ghosts;
+    private int numGhosts;
 
     public Board() {
         super();
-        BoardSize();
+        boardSize();
 
         initValues();
         timer = new Timer(deltaTime, this);
@@ -190,35 +192,49 @@ public class Board extends JPanel implements ActionListener {
         MyKeyAdapter keyb = new MyKeyAdapter();
         addKeyListener(keyb);
         currentFood = null;
-        ghost = null;
+        //ghost = null;
+        initializeGhosts();
         specialFood = null;
         canTurn = true;
         keyMemory = new ArrayList<DirectionType>();
-        
 
     }
-    private void drawBoard(Graphics g){
-         Image image=null;
+
+    private void initializeGhosts() {
+        int num = getNumGhosts();
+        ghosts = new Ghost[num];
+        for (int i = 0; i < num; i++) {
+            ghosts[i] = null;
+        }
+    }
+
+    private void drawBoard(Graphics g) {
+        Image image = null;
         try {
             image = ImageIO.read(getClass().getClassLoader().getResource("resources/bg.png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        Util.drawImage(g, new Node(0, 0), image,getWidth(), getHeight());
+        Util.drawImage(g, new Node(0, 0), image, getWidth(), getHeight());
     }
 
-    private void BoardSize() {
+    private void boardSize() {
         ChoseBoardSize d = new ChoseBoardSize(parentFrame, true);
         d.setVisible(true);
         num_cols = d.getNumCols();
         num_rows = d.getNumRows();
-        if(num_cols==0 || num_rows==0){
+        if (num_cols == 0 || num_rows == 0) {
             System.exit(0);
         }
 
-       
         specialFood = null;
 
+    }
+
+    private int getNumGhosts() {
+        ChoseDificulty d = new ChoseDificulty(parentFrame, true);
+        d.setVisible(true);
+        return d.getDificulty();
     }
 
     public void setScorer(IncrementScorer scorer) {
@@ -245,8 +261,10 @@ public class Board extends JPanel implements ActionListener {
                 || nextMove.row < 0 || nextMove.row >= num_rows) {
             return false;
         }
-        if (snake.getHead().isEqual(ghost.getGhostPosition())) {
-            return false;
+        for (Ghost g : ghosts) {
+            if (snake.getHead().isEqual(g.getGhostPosition())) {
+                return false;
+            }
         }
         return true;
     }
@@ -260,25 +278,61 @@ public class Board extends JPanel implements ActionListener {
         scorerDelegate.reset();
         keyPressed = 0;
         keyMemory = new ArrayList<DirectionType>();
-        timer.start();
-        currentFood = new Food(snake, num_rows, num_cols);
-        ghost = new Ghost(snake, num_rows, num_cols, currentFood, specialFood);
-        alive=true;
 
+        createGhosts();
+        timer.start();
+        currentFood = new Food(snake, num_rows, num_cols, ghosts);
+        //ghost = new Ghost(snake, num_rows, num_cols, currentFood, specialFood);
+
+        alive = true;
+
+    }
+
+    private void createGhosts() {
+        Node n1 = new Node(1, 1);
+        Node n2 = new Node(num_rows - 1, num_cols - 1);
+        Node n3 = new Node(num_rows - 1, 1);
+        Node n4 = new Node(1, num_cols - 1);
+
+        for (int i = 0; i < ghosts.length; i++) {
+            switch (i) {
+                case 0:
+                    ghosts[i] = new Ghost(n1,snake,num_rows,num_cols,i);
+                    break;
+                case 1:
+                    ghosts[i] = new Ghost(n2,snake,num_rows,num_cols,i);
+                    break;
+                case 2:
+                    ghosts[i] = new Ghost(n3,snake,num_rows,num_cols,i);
+                    break;
+                case 3:
+                    ghosts[i] = new Ghost(n4,snake,num_rows,num_cols,i);
+                    break;
+            }
+             ghosts[i].setFoods(currentFood, specialFood);
+        }
+        for(Ghost g:ghosts){
+            g.setOtherGhosts(ghosts);
+        }
+        
     }
 
     //Game Main Loop
     @Override
     public void actionPerformed(ActionEvent ae) {
 
-        ghostHasEaten();
+        ghostsHaveEaten();
         canTurn = true;
 
         generateFood();
 
         if (canMove(direction)) {
             snake.moveTo(direction, hasEaten());
-            ghost.moveGhost();
+            for (int i = 0; i < ghosts.length; i++) {
+                if (ghosts[i] != null) {
+                    ghosts[i].moveGhost();
+                }
+            }
 
         } else {
             try {
@@ -300,18 +354,19 @@ public class Board extends JPanel implements ActionListener {
 
     }
 
-    public void ghostHasEaten() {
+    public void ghostsHaveEaten() {
+        for (Ghost g : ghosts) {
+            if (currentFood != null && currentFood.getFoodPosition().isEqual(g.getGhostPosition())) {
+                currentFood = null;
+                scorerDelegate.increment(-6);
 
-        if (currentFood != null && currentFood.getFoodPosition().isEqual(ghost.getGhostPosition())) {
-            currentFood = null;
-            scorerDelegate.increment(-6);
+            }
 
-        }
+            if (specialFood != null && specialFood.getFoodPosition().isEqual(g.getGhostPosition())) {
+                specialFood = null;
+                scorerDelegate.increment(-25);
 
-        if (specialFood != null && specialFood.getFoodPosition().isEqual(ghost.getGhostPosition())) {
-            specialFood = null;
-            scorerDelegate.increment(-25);
-
+            }
         }
 
     }
@@ -350,24 +405,26 @@ public class Board extends JPanel implements ActionListener {
 
     public void generateFood() {
         if (foodGenerator % 5 == 0 && currentFood == null && specialFood == null) {
-            specialFood = new SpecialFood(snake, num_rows, num_cols);
+            specialFood = new SpecialFood(snake, num_rows, num_cols, ghosts);
         } else {
             if (currentFood == null && specialFood == null) {
-                currentFood = new Food(snake, num_rows, num_cols);
+                currentFood = new Food(snake, num_rows, num_cols, ghosts);
             }
         }
 
         foodGenerator++;
-        ghost.setFoods(currentFood, specialFood);
+        for (Ghost g : ghosts) {
+            g.setFoods(currentFood, specialFood);
+        }
     }
 
     public void gameOver() throws InterruptedException {
-        alive=false;
+        alive = false;
         repaint();
         timer.stop();
         scorerDelegate.paintFinalScore();
 
-        RecordsDialog d=null;
+        RecordsDialog d = null;
         try {
             d = new RecordsDialog(parentFrame, true, scorerDelegate.getScore());
         } catch (IOException ex) {
@@ -377,7 +434,7 @@ public class Board extends JPanel implements ActionListener {
         d.setVisible(true);
         deltaTime = 150;
         timer.setDelay(deltaTime);
-        BoardSize();
+        boardSize();
         initGame();
     }
 
@@ -393,14 +450,15 @@ public class Board extends JPanel implements ActionListener {
         }
         if (snake != null) {
 
-            snake.draw(g, squareWidth(), squareHeight(),direction,alive);
+            snake.draw(g, squareWidth(), squareHeight(), direction, alive);
 
         }
-        
-        if (ghost != null) {
-            ghost.draw(g, squareWidth(), squareHeight());
+        for (Ghost gh : ghosts) {
+            if (gh != null) {
+                gh.draw(g, squareWidth(), squareHeight());
+            }
         }
-        
+
         //drawBorder(g);
     }
 

@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author alu20925473g
@@ -18,40 +17,46 @@ import javax.imageio.ImageIO;
 public class Food {
 
     private Node position;
-   
 
-    public Food(Snake snake, int totalRows, int totalCols) {
-        boolean colisionWithSnake = true;
+    public Food(Snake snake, int totalRows, int totalCols, Ghost... ghosts) {
+        boolean colision = true;
 
-        while (colisionWithSnake) {
-            colisionWithSnake = false;
+        while (colision) {
+            colision = false;
             int row = (int) (Math.random() * totalRows);
             int col = (int) (Math.random() * totalCols);
             position = new Node(row, col);
-            
+
             for (Node body : snake.getNodes()) {
                 if (body.isEqual(position)) {
-                    colisionWithSnake = true;
+                    colision = true;
+                }
+            }
+            for (Ghost g : ghosts) {
+                if (g != null) {
+                    if (g.getGhostPosition().isEqual(position)) {
+                        colision = true;
+                    }
                 }
             }
 
         }
-        
 
     }
-    public Node getFoodPosition(){
+
+    public Node getFoodPosition() {
         return position;
     }
+
     public void draw(Graphics g, int squareWidth, int squareHeight) {
-       Image image=null;
+        Image image = null;
         try {
             image = ImageIO.read(getClass().getClassLoader().getResource("resources/food.png"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-           
+
         Util.drawImage(g, position, image, squareWidth, squareHeight);
-    
 
     }
 }
